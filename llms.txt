@@ -1,0 +1,32 @@
+# old-phone-tailnet
+
+> 把没有 root 的旧安卓手机接进自己的 Tailscale 私网：Termux + 用户态 Tailscale + 只认公钥的 SSH + 本机无线 ADB + Chrome 调试口（CDP）。
+> Turn a spare non-rooted Android phone into an SSH + Chrome DevTools Protocol (CDP) node on your Tailscale tailnet, using Termux and userspace Tailscale.
+
+## 组成
+- prompt.md：整段贴给任意 AI 助手，一步步带你配完
+- SKILL.md：Claude Code skill，完整步骤和常见问题
+- install-tailscale.sh（手机）：下载 Tailscale 官方静态版到 ~/bin
+- harden-ssh.sh（手机）：关闭密码登录，只认公钥
+- start.sh（手机）：拉起唤醒锁、sshd、Tailscale，adb 掉线重连和 9222 转发
+- check.sh（手机）：只读自检，包括检查公网隧道进程
+- pc-connect.sh（电脑）：经 Tailscale 把手机的 9222 转发到电脑本机
+
+## 关键事实
+- 不需要 root；需要 Android 11 或更新（无线调试从 11 开始）
+- 端口：SSH 8022，Chrome 调试口 9222，adb 5555
+- 用户态 Tailscale 不占安卓 VPN 位，能和代理工具同时开
+- 只走私网，不开公网隧道；Playwright 用 connectOverCDP("http://localhost:9222") 连接，Puppeteer 用 puppeteer.connect({browserURL})
+
+## 安全
+- 能 SSH 进手机的人也能操作手机上已登录的网页；tailnet 里有别人的设备时，用 ACL 只放行 8022；建议用专门的旧手机。
+
+## Docs
+- [README](https://github.com/ythx-101/old-phone-tailnet/blob/main/README.md)
+- [prompt.md](https://github.com/ythx-101/old-phone-tailnet/blob/main/prompt.md)
+- [SKILL.md](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/SKILL.md)
+- [install-tailscale.sh](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/scripts/install-tailscale.sh)
+- [harden-ssh.sh](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/scripts/harden-ssh.sh)
+- [start.sh](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/scripts/start.sh)
+- [check.sh](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/scripts/check.sh)
+- [pc-connect.sh](https://github.com/ythx-101/old-phone-tailnet/blob/main/skills/old-phone-tailnet/scripts/pc-connect.sh)

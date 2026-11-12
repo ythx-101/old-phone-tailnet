@@ -13,7 +13,7 @@ pgrep -x sshd >/dev/null || sshd
 
 # 2. 用户态 Tailscale：不占安卓的 VPN 位
 mkdir -p "$TS_DIR"
-if ! ~/bin/tailscale --socket="$SOCK" status >/dev/null 2>&1; then
+if ! pgrep -x tailscaled >/dev/null; then
   setsid nohup ~/bin/tailscaled --tun=userspace-networking --statedir="$TS_DIR" \
     --socket="$SOCK" --port=0 >"$TS_DIR/log" 2>&1 </dev/null &
   sleep 3

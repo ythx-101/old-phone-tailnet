@@ -1,0 +1,11 @@
+name: check-scripts
+on: [push, pull_request]
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: bash -n
+        run: for f in skills/old-phone-tailnet/scripts/*.sh; do bash -n "$f"; done
+      - name: shellcheck
+        run: shellcheck -s bash -S error skills/old-phone-tailnet/scripts/*.sh
